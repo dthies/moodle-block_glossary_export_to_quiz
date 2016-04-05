@@ -2,13 +2,17 @@
 
 class block_glossary_export_to_quiz extends block_base {
     function init() {
+        global $SESSION;
         $this->title = get_string('pluginname','block_glossary_export_to_quiz');
+        $SESSION->block_glossary_export_to_quiz = new stdClass();
         $SESSION->block_glossary_export_to_quiz->status = '';
     }
 
     function specialization() {
         global $CFG, $DB, $OUTPUT, $PAGE;
-        $this->config->title = get_string('pluginname','block_glossary_export_to_quiz');
+        if (isset($this->config)) {
+            $this->config->title = get_string('pluginname','block_glossary_export_to_quiz');
+        }
         $course = $this->page->course;
         $this->course = $course;
     }
@@ -22,15 +26,18 @@ class block_glossary_export_to_quiz extends block_base {
     function get_content() {
         global $USER, $CFG, $DB, $PAGE, $SESSION;
         $editing = $PAGE->user_is_editing();
+        if (!$this->content) {
+            $this->content = new stdClass();
+        }
 
         // set view block permission to course:mod/glossary:export to prevent students etc to view this block
         $course = $this->page->course; 
-        $context = get_context_instance(CONTEXT_COURSE, $course->id);
+        $context = context_course::instance($course->id);
         if (!has_capability('mod/glossary:export', $context)) {
             return;
         }
         // get list of all current course glossaries
-        $glossaries = $DB->get_records_menu('glossary', array('course' => $this->course->id));        
+        $glossaries = $DB->get_records_menu('glossary', array('course' => ($course->id)));        
         
         // no glossary available in current course -> return
         if(empty($glossaries)) {
@@ -40,8 +47,9 @@ class block_glossary_export_to_quiz extends block_base {
             return $this->content;
         }
         
-        if (empty($this->config->glossary) || empty($SESSION->block_glossary_export_to_quiz->status) ) {
+        if (empty($this->config->glossary)) { // || empty($SESSION->block_glossary_export_to_quiz->status) ) {
             if ($editing) {
+                $this->content = new stdClass;
                 $this->content->text   = get_string('notyetconfiguredediting','block_glossary_export_to_quiz');
         	} else {
                 $this->content->text   = get_string('notyetconfigured','block_glossary_export_to_quiz');

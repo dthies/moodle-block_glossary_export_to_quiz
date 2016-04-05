@@ -33,7 +33,7 @@
 
     require_login($course->id, false, $cm);
     
-    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+    $context = context_module::instance($cm->id);
     require_capability('mod/glossary:export', $context);
 
     $filename = clean_filename(strip_tags(format_string($glossary->name,true)).'.xml');
@@ -60,7 +60,7 @@
 				break;
 	}
     if ($limitnum) {
-    	$limit = "LIMIT $limitfrom, $limitnum ";
+        $limit = "LIMIT $limitfrom, $limitnum";
     } else {
     	$limit = '';
     }
@@ -95,7 +95,7 @@
            $expout .= "        $categorypath\n";
            $expout .= "    </category>\n";
            $expout .= "  </question>\n";        
-    	$context = get_context_instance(CONTEXT_MODULE, $cm->id);
+    $context = context_module::instance($cm->id);
            
     if ( $entries = $DB->get_records_sql($sql) ) {
         $questiontype_params = explode("_", $questiontype);
