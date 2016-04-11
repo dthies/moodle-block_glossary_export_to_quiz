@@ -60,25 +60,25 @@
 				break;
 	}
     if ($limitnum) {
-        $limit = "LIMIT $limitfrom, $limitnum";
+        $limit = "LIMIT $limitnum OFFSET $limitfrom";
     } else {
     	$limit = '';
     }
 	
     $catfrom = "";
-    $catwhere = "";
+    $catwhere = "WHERE ";
 	
-	if ($cat) {
-		$category = $DB->get_record('glossary_categories', array('id'=>$cat));
+    if ($cat) {
+	$category = $DB->get_record('glossary_categories', array('id'=>$cat));
         $categoryname = $category->name;     	
     	$giftcategoryname .= '_'.$categoryname;
-    	$catfrom = ", mdl_glossary_entries_categories c ";
-    	$catwhere = "and ge.id = c.entryid and c.categoryid = $cat";
-	}    	
-	$sql = "SELECT * FROM ".$CFG->prefix."glossary_entries ge $catfrom "
-    . "WHERE ge.glossaryid = $glossary->id "
-    . "AND ge.approved "
+        $catfrom = "JOIN mdl_glossary_entries_categories AS c ";
+        $catwhere = "ON ge.id = c.entryid AND c.categoryid = $cat AND ";
+    }
+	$sql = "SELECT * FROM ".$CFG->prefix."glossary_entries AS ge $catfrom "
     . "$catwhere "
+    . "ge.glossaryid = $glossary->id "
+    . "AND ge.approved = 1 "
     . "$sortorder "
     . "$limit";
     
