@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -15,6 +14,20 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-$plugin->version = 2011091202;
-$plugin->requires = 2011091200;
-$plugin->component = 'block_glossary_export_to_quiz';
+
+
+/**
+ * Glossary export to question version details.
+ *
+ * @package    block_glossary_export_to_quiz
+ * @copyright  2016 onward Daniel Thies <dthies@ccal.edu>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+defined('MOODLE_INTERNAL') || die();
+
+$plugin->version   = 2018080400;        // The current plugin version (Date: YYYYMMDDXX).
+$plugin->requires  = 2014111000;        // Requires Moodle >= 2.8 version.
+$plugin->maturity  = MATURITY_STABLE;
+$plugin->release   = 2018080400;         // Version for Moodle 2.8 to 3.5
+$plugin->component = 'block_glossary_export_to_quiz';  // Full name of the plugin (used for diagnostics).
